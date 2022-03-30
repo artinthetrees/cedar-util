@@ -42,6 +42,9 @@ def get_instance(server_address, api_key, instance_id):
     request_url = server_address + "/template-instances/" + escape(instance_id)
     return get_resource(api_key, request_url)
 
+def get_instance_details(server_address, api_key, instance_id):
+    request_url = server_address + "/template-instances/" + escape(instance_id) + "/details"
+    return get_resource(api_key, request_url)
 
 def get_template_permissions(server_address, api_key, template_id):
     request_url = server_address + "/templates/" + escape(template_id) + "/permissions"
