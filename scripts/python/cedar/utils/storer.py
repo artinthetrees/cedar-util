@@ -39,7 +39,11 @@ def store_field(server_address, api_key, field, folder_id):
 
 
 def store_instance(server_address, api_key, instance, folder_id):
-    request_url = server_address + "/template-instances?folder_id=" + escape(folder_id)
+    if folder_id is not None:
+        request_url = server_address + "/template-instances?folder_id=" + escape(folder_id)
+    else:
+        request_url = server_address + "/template-instances" 
+        
     return store_resource(api_key, request_url, instance)
 
 
