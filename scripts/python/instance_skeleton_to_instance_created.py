@@ -1,6 +1,7 @@
-# this script takes a template instance skeleton that is saved locally, populates with
-# locally available data, and posts to cedar to create a new instance on cedar,
-# grabbing the template instance id from the newly created instance
+# this script takes a template instance skeleton that is saved locally and locally available (meta)data,
+# populates the instance skeleton with the locally available (meta)data,
+# posts the newly populated instance to cedar to create a new instance on cedar,
+# and grabs the template instance id from the newly created instance for future ref
 
 # considerations:
 # 1) population of locally available metadata values should be contained in its own

@@ -1,4 +1,11 @@
-# this scripts takes a template id and a cedar user uuid, finds the most recently created instance of the template, and shares specified access type with the user
+# this scripts takes a template instance id and a cedar user uuid,
+# checks to make sure the user has read access to the template the instance is based on,
+# shares read access to the template if the user does not already have read access,
+# and shares write access to the template instance with the user
+
+# considerations:
+# 1) user must have read access to the template the template instance is based off of
+#    in order to be able to properly open and use the template instance
 
 import os, sys
 import pandas as pd
