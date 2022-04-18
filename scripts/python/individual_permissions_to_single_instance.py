@@ -1,7 +1,6 @@
 import os, sys
+import pandas as pd
 from cedar.utils import getter, updater, searcher
-
-https://resource.metadatacenter.org/template-instances/%22pav%3AcreatedOn%22/details
 
 def main():
     # Program parameters
@@ -14,8 +13,13 @@ def main():
 
     server_address = "https://resource." + os.environ['CEDAR_HOST']
     api_key = "apiKey " + os.environ['CEDAR_API_KEY']
-    user_full_id = "https://metadatacenter.org/users/" + user_id
-    platform_full_id = "https://metadatacenter.org/users/" + user_id
+
+    # construct the full user ids here
+    if user_id is not None:
+        user_full_id = "https://metadatacenter.org/users/" + user_id
+
+    if platform_id is not None:
+        platform_full_id = "https://metadatacenter.org/users/" + platform_id
     
     # print("Adding permission " + permission_type + " to user " + user_id + " for template instance " + instance_id)
 
@@ -38,13 +42,20 @@ def main():
     #    should not fail but exit with an informative error if there are no instances even if max_count is not specified
 
     instance_ids = searcher.search_instances_of(server_address, api_key, template_id)
-
+    
     createdOn = []
     createdBy = []
 
     for instance_id in instance_ids:
         # get "pav:createdOn" and "pav:createdBy" fields for each instance;
         # add to a df with row for each instance; columns for instance id, createdOn, createdBy
+        instance_details = getter.get_instance_details(server_address, api_key, instance_id)
+        createdOn = createdOn.append(instance_details['createdOnTS'])
+        createdBy = createdBy.append(instance_details['pav:createdBy']
+
+    instances_df = pd.DataFrame({'id':instance_ids,'created_on':createdOn,'created_by':createdBy})
+                                     
+       
         # QUESTION:
         # for a list of instances how do we get "pav:createdOn" and "pav:createdBy" fields for each instance?
         # in the array of instances that are returned by search_instances_of, are the instances sorted in descending order of creation?
