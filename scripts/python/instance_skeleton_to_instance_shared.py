@@ -25,6 +25,9 @@ def main(folder_id = None, permission_type = "write"):
     # give the user specified permissions to instance (default permission is write)
     add_single_user_permission_to_instance(server_address, api_key, instance_id, user_id, permission_type)
 
+def user_id_from_uuid(uuid):
+    return "https://metadatacenter.org/users/" + uuid
+    
 def load_instance_skeleton(instance_skeleton_path):
     with open(instance_skeleton_path, 'r') as myfile:
     data=myfile.read()
@@ -60,3 +63,33 @@ def create_instance_on_cedar(server_address, api_key, instance):
     instance_created_id = instance_created["@id"]
 
     return instance_created_text, instance_created_id
+
+def add_single_user_permission_to_instance(server_address, api_key, instance_id, user_id, permission_type):
+
+    # get the permissions on the instance
+    instance_permissions = getter.get_instance_permissions(server_address, api_key, instance_id)
+    user_permissions = instance_permissions['userPermissions']
+
+    if has_no_user_id(user_permissions, user_id):
+        print("Adding a new user permission to " + instance_id + ": " + permission_type)
+        instance_permissions['userPermissions'].append(create_user_permission(user_id, permission_type))
+        updater.update_instance_permission(server_address, api_key, instance_id, instance_permissions)        
+
+
+def has_no_user_id(user_permissions, user_id):
+    for user_permission in user_permissions:
+        current_user_id = user_permission['user']['@id']
+        if current_user_id == user_id:
+            return False
+    return True
+
+def create_user_permission(user_id, permission_type):
+    return {
+        'user': {
+            '@id': user_id
+        },
+        'permission': permission_type
+    }
+
+if __name__ == "__main__":
+    main()
